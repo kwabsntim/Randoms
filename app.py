@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, send_from_directory
 from datetime import datetime
 
 app = Flask(__name__)
@@ -17,6 +17,14 @@ def homepage():
 @app.route('/ping')
 def ping():
     return 'pong', 200
+
+
+@app.route('/sw.js')
+def sw():
+    response = send_from_directory(app.static_folder, 'sw.js')
+    response.headers['Content-Type'] = 'application/javascript'
+    response.headers['Service-Worker-Allowed'] = '/'
+    return response
 
 
 if __name__ == '__main__':
