@@ -14,5 +14,10 @@ def homepage():
     return render_template('homepage.html')
 
 
+@app.route('/ping')
+def ping():
+    return 'pong', 200
+
+
 if __name__ == '__main__':
     app.run(debug=True)
