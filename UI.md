@@ -20,27 +20,27 @@
 
 | Name | Hex | Usage |
 |------|-----|-------|
-| Green Primary | `#1D9E75` | Buttons, active states, links, brand accents |
-| Green Dark | `#0F6E56` | Text on green backgrounds, hover states |
-| Green Deepest | `#085041` | Headings on light green fills |
-| Green Light | `#E1F5EE` | Card fills, notice backgrounds, selected states |
-| Green Border | `#9FE1CB` | Borders on green-tinted cards |
-| Amber Light | `#FAEEDA` | Warning badges, pending states |
-| Amber Text | `#633806` | Text on amber backgrounds |
-| Red Light | `#FCEBEB` | Reject/danger backgrounds |
-| Red Text | `#A32D2D` | Text on red backgrounds |
-| Surface | `#F5F5F3` | Page background |
-| Card | `#FFFFFF` | Card/panel background |
-| Border Default | `rgba(0,0,0,0.12)` | Default borders — 0.5px |
-| Border Emphasis | `rgba(0,0,0,0.25)` | Hover borders |
-| Text Primary | `#1A1A18` | Headings, important text |
-| Text Secondary | `#6B6B66` | Body, descriptions |
-| Text Tertiary | `#9E9E98` | Timestamps, hints, labels |
+| Brand Blue | `#1D9BF0` | Buttons, active states, links, brand accents |
+| Brand Blue Dark | `#1A8CD8` | Hover states on blue elements |
+| Brand Blue Tint | `#1D9BF01A` | Selected backgrounds, tinted fills |
+| Background | `#000000` | Page background |
+| Surface | `#16181C` | Card/panel background |
+| Surface Raised | `#1E2328` | Elevated cards, sidebar |
+| Border Default | `rgba(255,255,255,0.12)` | Default borders — 0.5px |
+| Border Emphasis | `rgba(255,255,255,0.25)` | Hover borders |
+| Text Primary | `#E7E9EA` | Headings, important text |
+| Text Secondary | `#71767B` | Body, descriptions |
+| Text Tertiary | `#536471` | Timestamps, hints, labels |
+| Amber Light | `#3D2E00` | Warning badge backgrounds |
+| Amber Text | `#FFB800` | Warning badge text |
+| Red Light | `#3D0000` | Reject/danger backgrounds |
+| Red Text | `#F4212E` | Danger text and icons |
 
 ### 2.2 Typography
 
 ```
-Font: Inter (Google Fonts) — weights 400 and 500 only. Never use 600 or 700.
+Font: Sora (Google Fonts) — weights 400 and 500 only. Never use 600 or 700.
+Import: @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500&display=swap');
 
 Heading large:  20–22px / weight 500 / color Text Primary
 Heading medium: 16px   / weight 500 / color Text Primary
@@ -109,9 +109,9 @@ Common icons used in Randoms:
 
 ### 2.6 Brand Color Application
 
-The brand green (`#1D9E75`) appears on:
+The brand blue (`#1D9BF0`) appears on:
 - Primary buttons (filled)
-- Active nav links (bottom border line)
+- Active nav links (bottom border line — 2px blue underline, Twitter-style)
 - Active sidebar items (left border + text)
 - The letter "d" in the "randoms" logotype
 - Upload progress indicators
@@ -493,7 +493,7 @@ Filter section label: "OCCASIONS"
   - Clicking an occasion filters the feed to that occasion only (HTMX, no reload)
   Icons by type: ti-graduation-cap, ti-cake, ti-users, ti-calendar-event
 
-Active filter: green left border + green tint background
+Active filter: blue left border (#1D9BF0) + blue tint background
 ```
 
 ---
@@ -516,7 +516,7 @@ Active filter: green left border + green tint background
 └──────────────┘
 ```
 
-On mobile the sidebar disappears. Occasion filters become a horizontal scrollable pill row pinned below the top nav. Pills: "All", then one per occasion. Active pill: green fill, white text. Inactive: grey surface.
+On mobile the sidebar disappears. Occasion filters become a horizontal scrollable pill row pinned below the top nav. Pills: "All", then one per occasion. Active pill: blue fill (#1D9BF0), white text. Inactive: surface raised background, secondary text.
 
 ---
 
@@ -597,7 +597,7 @@ Actions row:
 
   Left side:
     ♥ [count]  — heart/like toggle button
-      Liked state: filled heart, green color (#1D9E75)
+      Liked state: filled heart, blue color (#1D9BF0)
       Unliked: outline heart, Text Tertiary
     💬 [count] replies — opens inline reply thread (see below)
 

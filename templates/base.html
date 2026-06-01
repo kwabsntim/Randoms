@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Randoms{% endblock %}</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+
+  <!-- Tabler Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+  <!-- Sora font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500&family=Outfit:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2uPlA23ad5r3IkjPQz2CxoF2cjNpp8jl0Y" crossorigin="anonymous"></script>
+  <meta name="htmx-config" content='{"defaultSwapStyle":"outerHTML","indicatorClass":"htmx-loading"}'>
+
+  <!-- App CSS -->
+  <link rel="stylesheet" href="/static/style.css">
+
+  {% block head %}{% endblock %}
+
+  <!-- Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/static/sw.js');
+    }
+  </script>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <i class="ti ti-aperture" aria-hidden="true"></i>
+      <span>Randoms</span>
+    </a>
+    <div class="navbar-actions">
+      {% if current_user is defined and current_user.is_authenticated %}
+        <a href="/dashboard" class="nav-link {% if request.path == '/dashboard' %}active{% endif %}">
+          <i class="ti ti-layout-dashboard" aria-hidden="true"></i>
+        </a>
+        <a href="/settings" class="nav-link {% if request.path == '/settings' %}active{% endif %}">
+          <img src="{{ current_user.avatar_url }}" alt="{{ current_user.name }}" class="nav-avatar">
+        </a>
+      {% else %}
+        <a href="/login" class="btn-primary btn-sm">Sign in</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  {% if current_user is defined and current_user.is_authenticated %}
+  <!-- SIDEBAR (desktop only) -->
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <div class="avatar-initials">{{ current_user.name[:2].upper() }}</div>
+      <div>
+        <div class="sidebar-name">{{ current_user.name }}</div>
+        <div class="sidebar-sub">My wall</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="/dashboard" class="sidebar-item {% if request.path == '/dashboard' %}active{% endif %}">
+        <i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard
+      </a>
+      <a href="/wall" class="sidebar-item {% if request.path == '/wall' %}active{% endif %}">
+        <i class="ti ti-photo" aria-hidden="true"></i> My wall
+      </a>
+      <a href="/occasions/new" class="sidebar-item {% if request.path == '/occasions/new' %}active{% endif %}">
+        <i class="ti ti-plus" aria-hidden="true"></i> New occasion
+      </a>
+    </nav>
+
+    {% block sidebar_extra %}{% endblock %}
+  </aside>
+  {% endif %}
+
+  <!-- MAIN CONTENT -->
+  <main class="main {% if current_user is defined and current_user.is_authenticated %}main-authenticated{% endif %}">
+    <!-- Toast notification (OOB swap target) -->
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="toast toast-{{ category }} toast-visible">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  {% if current_user is defined and current_user.is_authenticated %}
+  <!-- BOTTOM NAV (mobile only) -->
+  <nav class="bottom-nav">
+    <a href="/dashboard" class="bottom-nav-item {% if request.path == '/dashboard' %}active{% endif %}">
+      <i class="ti ti-layout-dashboard" aria-hidden="true"></i>
+      <span>Home</span>
+    </a>
+    <a href="/wall" class="bottom-nav-item {% if request.path == '/wall' %}active{% endif %}">
+      <i class="ti ti-photo" aria-hidden="true"></i>
+      <span>Wall</span>
+    </a>
+    <a href="/occasions/new" class="bottom-nav-item {% if request.path == '/occasions/new' %}active{% endif %}">
+      <i class="ti ti-plus" aria-hidden="true"></i>
+      <span>New</span>
+    </a>
+    <a href="/settings" class="bottom-nav-item {% if request.path == '/settings' %}active{% endif %}">
+      <i class="ti ti-settings" aria-hidden="true"></i>
+      <span>Settings</span>
+    </a>
+  </nav>
+  {% endif %}
+
+  <!-- Modal container (HTMX loads modals/sheets here) -->
+  <div id="modal-container"></div>
+
+  <!-- Global HTMX error handler -->
+  <script>
+    document.body.addEventListener('htmx:responseError', function () {
+      const toast = document.getElementById('toast');
+      toast.className = 'toast toast-error toast-visible';
+      toast.textContent = 'Something went wrong. Try again.';
+      setTimeout(() => toast.className = 'toast', 3000);
+    });
+  </script>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>
